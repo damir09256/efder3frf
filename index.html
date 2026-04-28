@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ақылды тест жүйесі</title>
+<title>Ақылды Емтихан Pro</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
 
@@ -25,15 +25,14 @@ height:100vh;
 }
 
 .card{
-width:420px;
+width:450px;
 padding:30px;
 border-radius:20px;
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(12px);
 border:1px solid rgba(255,255,255,0.1);
 text-align:center;
-box-shadow:0 10px 40px rgba(0,0,0,0.5);
-animation:fade 1s ease;
+box-shadow:0 10px 40px rgba(0,0,0,0.6);
 }
 
 h1{
@@ -44,7 +43,7 @@ background:linear-gradient(90deg,#00ffd5,#00aaff);
 }
 
 p{
-opacity:0.7;
+opacity:0.8;
 margin-bottom:15px;
 }
 
@@ -80,14 +79,26 @@ margin-top:15px;
 font-weight:bold;
 }
 
-#level{
+#info{
 margin-top:10px;
-opacity:0.8;
+opacity:0.7;
+font-size:14px;
 }
 
-@keyframes fade{
-from{opacity:0;transform:translateY(-20px);}
-to{opacity:1;transform:translateY(0);}
+.progress{
+width:100%;
+height:8px;
+background:rgba(255,255,255,0.1);
+border-radius:10px;
+margin-top:15px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#00ffd5,#00aaff);
+transition:0.4s;
 }
 </style>
 </head>
@@ -96,48 +107,58 @@ to{opacity:1;transform:translateY(0);}
 
 <div class="card">
 
-<h1>🧠 Ақылды тест</h1>
+<h1>🧠 Емтихан Pro</h1>
+
 <p id="question">Жүктелуде...</p>
 
-<input id="answer" placeholder="Жауабыңды жаз...">
+<input id="answer" placeholder="Жауап жаз...">
 
 <button onclick="check()">Тексеру</button>
 
 <div id="result"></div>
-<div id="level"></div>
+<div id="info"></div>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
 
 </div>
 
 <script>
 
-// 📌 10 сұрақ (жеңіл + қиын деңгей)
+// 📊 КҮШТІ СҰРАҚТАР (мектеп деңгейі)
 let questions = [
-{q:"2 + 2 =", a:"4", level:1},
-{q:"5 + 3 =", a:"8", level:1},
-{q:"10 - 4 =", a:"6", level:1},
-{q:"3 × 3 =", a:"9", level:1},
-{q:"12 / 3 =", a:"4", level:1},
+{q:"12 + 18 =", a:"30", level:"Easy"},
+{q:"45 - 19 =", a:"26", level:"Easy"},
+{q:"6 × 7 =", a:"42", level:"Easy"},
 
-{q:"15 + 7 =", a:"22", level:2},
-{q:"18 - 9 =", a:"9", level:2},
-{q:"6 × 4 =", a:"24", level:2},
-{q:"36 / 6 =", a:"6", level:2},
-{q:"20 + 15 =", a:"35", level:2},
+{q:"(15 + 5) / 4 =", a:"5", level:"Medium"},
+{q:"3² + 4² =", a:"25", level:"Medium"},
+{q:"2x = 14, x =", a:"7", level:"Medium"},
+
+{q:"(36 ÷ 6) × 3 =", a:"18", level:"Hard"},
+{q:"√81 =", a:"9", level:"Hard"},
+{q:"5² - 3² =", a:"16", level:"Hard"},
+{q:"(10 + 5) × 2 - 10 =", a:"20", level:"Hard"},
 ];
 
 let current = 0;
 let score = 0;
 
-// сұрақты көрсету
 function load(){
 document.getElementById("question").innerText = questions[current].q;
 document.getElementById("answer").value = "";
-document.getElementById("level").innerText = "Level: " + questions[current].level;
+document.getElementById("info").innerText = "Level: " + questions[current].level;
+updateBar();
+}
+
+function updateBar(){
+let percent = (current / questions.length) * 100;
+document.getElementById("bar").style.width = percent + "%";
 }
 
 load();
 
-// тексеру
 function check(){
 let user = document.getElementById("answer").value;
 let res = document.getElementById("result");
@@ -146,7 +167,6 @@ if(user == questions[current].a){
 score++;
 res.style.color = "#00ff99";
 res.innerHTML = "✔ Дұрыс!";
-
 }else{
 res.style.color = "#ff4d4d";
 res.innerHTML = "✖ Қате!";
@@ -154,17 +174,19 @@ res.innerHTML = "✖ Қате!";
 
 current++;
 
-// егер тест бітсе
 if(current >= questions.length){
 document.getElementById("question").innerHTML =
-"🎉 Тест аяқталды! Нәтиже: " + score + "/10";
+"🎉 Емтихан аяқталды! Нәтиже: " + score + " / " + questions.length;
 
-document.getElementById("level").innerHTML = "";
+document.getElementById("info").innerHTML = "";
+
+updateBar();
 
 return;
 }
 
-setTimeout(load, 800);
+updateBar();
+setTimeout(load, 700);
 }
 
 </script>
